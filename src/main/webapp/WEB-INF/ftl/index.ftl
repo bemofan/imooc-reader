@@ -89,7 +89,6 @@
     </div>
 
     <div id="bookList">
-
         <a href="/book/5" style="color: inherit">
             <div class="row mt-2 book">
                 <div class="col-4 mb-2 pr-2">
