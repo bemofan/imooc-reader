@@ -20,7 +20,7 @@ public class BookServiceImplTest {
 
     @Test
     public void paging() {
-        IPage<Book> paging = bookService.paging(3, 11);
+        IPage<Book> paging = bookService.paging(2L, "quantity", 1, 11);
 
         List<Book> records = paging.getRecords();
         for (Book record : records) {

@@ -24,8 +24,20 @@ public class BookServiceImpl implements BookService {
     private BookMapper bookMapper;
 
     @Override
-    public IPage<Book> paging(Integer page, Integer rows) {
+    public IPage<Book> paging(Long categoryId, String order, Integer page, Integer rows) {
         QueryWrapper<Book> queryWrapper = new QueryWrapper<>();
+        if (categoryId != null && categoryId != -1) {
+            queryWrapper.eq("category_id", categoryId);
+        }
+        if (order != null) {
+            if (order.equals("quantity")) {
+                queryWrapper.orderByDesc("evaluation_quantity");
+            }
+            if (order.equals("score")) {
+                queryWrapper.orderByDesc("evaluation_score");
+            }
+        }
+
         /*
          * mybatis-plus Page对象中page表示页数，rows表示每页的显示条数
          * 例如 new Page<>(2, 3) =》表示的是第二页，每页显示的数据都是3条，包括第一页也是三条数据

@@ -33,10 +33,10 @@ public class BookController {
 
     @GetMapping("/books")
     @ResponseBody
-    public IPage<Book> selectBook(Integer pageNumber) {
+    public IPage<Book> selectBook(Long categoryId, String order, Integer pageNumber) {
         if (pageNumber == null) {
             pageNumber = 1;
         }
-        return bookService.paging(pageNumber, 10);
+        return bookService.paging(categoryId, order, pageNumber, 10);
     }
 }

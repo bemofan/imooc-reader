@@ -107,7 +107,18 @@
             /* 绑定 ”加载更多“ 按钮单击事件*/
             $("#btnMore").click(function () {
                 loadMore(false);
+            });
+
+            $(".category").click(function () {
+                $(".category").removeClass("highlight");
+                $(".category").addClass("text-black-50");
+                $(this).addClass("highlight");
             })
+            $(".order").click(function () {
+                $(".order").removeClass("highlight");
+                $(".order").addClass("text-black-50");
+                $(this).addClass("highlight");
+            });
 
         })
     </script>
