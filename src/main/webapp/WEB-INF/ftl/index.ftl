@@ -67,13 +67,18 @@
 
         function loadMore(isReset) {
             if (isReset) {
+                $("#bookList").html("");
                 $("#nextPage").val(1);
             }
             let nextPage = $("#nextPage").val();
+            let categoryId = $("#categoryId").val();
+            let order = $("#order").val();
             $.ajax({
                 url: "/books",
                 data: {
                     pageNumber: nextPage,
+                    categoryId: categoryId,
+                    order: order
                 },
                 dataType: "json",
                 success: function (json) {
@@ -113,11 +118,17 @@
                 $(".category").removeClass("highlight");
                 $(".category").addClass("text-black-50");
                 $(this).addClass("highlight");
+                let categoryId = $(this).data("category");
+                $("#categoryId").val(categoryId);
+                loadMore(true);
             })
             $(".order").click(function () {
                 $(".order").removeClass("highlight");
                 $(".order").addClass("text-black-50");
                 $(this).addClass("highlight");
+                let order = $(this).data("order");
+                $("#order").val(order);
+                loadMore(true);
             });
 
         })

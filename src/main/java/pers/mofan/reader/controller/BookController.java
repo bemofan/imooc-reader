@@ -3,6 +3,7 @@ package pers.mofan.reader.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import pers.mofan.reader.entity.Book;
@@ -38,5 +39,14 @@ public class BookController {
             pageNumber = 1;
         }
         return bookService.paging(categoryId, order, pageNumber, 10);
+    }
+
+    @GetMapping("/book/{id}")
+    public ModelAndView showDetail(@PathVariable("id")Long id) {
+        Book book = bookService.selectById(id);
+        ModelAndView mav = new ModelAndView("/detail");
+        mav.addObject("book", book);
+        return mav;
+
     }
 }

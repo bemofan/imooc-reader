@@ -20,6 +20,8 @@ import javax.annotation.Resource;
 @Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 public class BookServiceImpl implements BookService {
 
+    public static final String QUANTITY = "quantity";
+    public static final String SCORE = "score";
     @Resource
     private BookMapper bookMapper;
 
@@ -30,10 +32,10 @@ public class BookServiceImpl implements BookService {
             queryWrapper.eq("category_id", categoryId);
         }
         if (order != null) {
-            if (order.equals("quantity")) {
+            if (order.equals(QUANTITY)) {
                 queryWrapper.orderByDesc("evaluation_quantity");
             }
-            if (order.equals("score")) {
+            if (order.equals(SCORE)) {
                 queryWrapper.orderByDesc("evaluation_score");
             }
         }
@@ -45,5 +47,10 @@ public class BookServiceImpl implements BookService {
         Page<Book> p = new Page<>(page, rows);
         Page<Book> bookPage = bookMapper.selectPage(p, queryWrapper);
         return bookPage;
+    }
+
+    @Override
+    public Book selectById(Long bookId) {
+        return bookMapper.selectById(bookId);
     }
 }
