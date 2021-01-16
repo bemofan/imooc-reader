@@ -45,8 +45,7 @@ public class BookServiceImpl implements BookService {
          * 例如 new Page<>(2, 3) =》表示的是第二页，每页显示的数据都是3条，包括第一页也是三条数据
          */
         Page<Book> p = new Page<>(page, rows);
-        Page<Book> bookPage = bookMapper.selectPage(p, queryWrapper);
-        return bookPage;
+        return bookMapper.selectPage(p, queryWrapper);
     }
 
     @Override
