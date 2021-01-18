@@ -5,7 +5,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import pers.mofan.reader.service.MemberService;
+import pers.mofan.reader.service.exception.BusinessException;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +21,8 @@ import java.util.Map;
  */
 @Controller
 public class MemberController {
+    @Resource
+    MemberService memberService;
 
     @GetMapping("/register.html")
     public ModelAndView showRegister() {
@@ -27,16 +32,25 @@ public class MemberController {
     @PostMapping("/register")
     @ResponseBody
     public Map<String, String> register(String vc, String username, String password, String nickname, HttpServletRequest request) {
+        /* 正确验证码 */
         String verifyCode = (String) request.getSession().getAttribute("kaptchaVerifyCode");
+        /* 比较验证码 */
         Map<String, String> result = new HashMap<>(16);
         if (vc == null || !vc.equalsIgnoreCase(verifyCode)) {
             result.put("code", "VC01");
             result.put("msg", "验证码错误");
         } else {
-            result.put("code", "0");
-            result.put("msg", "success");
-        }
+            try {
+                memberService.createMember(username, password, nickname);
+                result.put("code", "0");
+                result.put("msg", "success");
+            } catch (BusinessException e) {
+                e.printStackTrace();
+                result.put("code", e.getCode());
+                result.put("msg", e.getMsg());
+            }
 
+        }
         return result;
     }
 }

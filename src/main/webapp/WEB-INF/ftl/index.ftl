@@ -146,7 +146,7 @@
             </li>
 
         </ul>
-        <a href="" class="btn btn-light btn-sm">
+        <a href="/login" class="btn btn-light btn-sm">
             <img style="width: 2rem;margin-top: -5px" class="mr-1" src="../../images/user_icon.png" alt="">登录
         </a>
     </nav>
