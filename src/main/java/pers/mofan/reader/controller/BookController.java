@@ -55,6 +55,7 @@ public class BookController {
         mav.addObject("book", book);
         mav.addObject("evaluationList",evaluationList);
         return mav;
+
     }
 
 }

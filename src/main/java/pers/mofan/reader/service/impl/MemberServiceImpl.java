@@ -19,7 +19,7 @@ import java.util.Random;
  * @date 2021/1/18 20:17
  */
 @Service("memberService")
-@Transactional
+@Transactional(rollbackFor = BusinessException.class)
 public class MemberServiceImpl implements MemberService {
 
 
@@ -41,5 +41,20 @@ public class MemberServiceImpl implements MemberService {
 
         Member member = Member.builder().username(username).password(md5).nickname(nickname).salt(salt).createTime(new Date()).build();
         memberMapper.insert(member);
+    }
+
+    @Override
+    public Member checkLogin(String username, String password) {
+        QueryWrapper<Member> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username", username);
+        Member member = memberMapper.selectOne(queryWrapper);
+        if (member == null) {
+            throw new BusinessException("M02", "用户不存在");
+        }
+        String md5Digest = Md5Utils.md5Digest(password, member.getSalt());
+        if (!md5Digest.equals(member.getPassword())) {
+            throw new BusinessException("M03", "密码错误");
+        }
+        return member;
     }
 }

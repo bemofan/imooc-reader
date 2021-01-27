@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import pers.mofan.reader.entity.Member;
 import pers.mofan.reader.service.MemberService;
 
 import javax.annotation.Resource;
@@ -21,6 +22,12 @@ public class MemberServiceImplTest {
 
     @Test
     public void createMember() {
-        memberService.createMember(new Date().toString().substring(11, 19), "s123456", "测试");
+        memberService.createMember(new Date().toString().substring(11, 19), "S123456", "测试");
+    }
+
+    @Test
+    public void checkLogin() {
+        Member member = memberService.checkLogin("12345678", "12345678");
+        System.out.println(member);
     }
 }
