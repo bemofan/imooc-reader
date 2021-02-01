@@ -13,7 +13,7 @@
 
  Date: 30/05/2020 15:09:03
 */
-
+use imooc_reader;
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 

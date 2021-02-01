@@ -1,6 +1,7 @@
 package pers.mofan.reader.service;
 
 import pers.mofan.reader.entity.Member;
+import pers.mofan.reader.entity.MemberReadState;
 
 /**
  * 会员
@@ -24,4 +25,12 @@ public interface MemberService {
      * @return 登录对象
      */
     Member checkLogin(String username, String password);
+
+    /**
+     * 获取阅读状态
+     * @param memberId 会员编号
+     * @param bookId 图书编号
+     * @return 阅读状态对象
+     */
+    MemberReadState selectMemberReadState(Long memberId, Long bookId);
 }

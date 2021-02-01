@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pers.mofan.reader.entity.Member;
+import pers.mofan.reader.entity.MemberReadState;
 import pers.mofan.reader.mapper.MemberMapper;
+import pers.mofan.reader.mapper.MemberReadStateMapper;
 import pers.mofan.reader.service.MemberService;
 import pers.mofan.reader.service.exception.BusinessException;
 import pers.mofan.reader.utils.Md5Utils;
@@ -25,6 +27,8 @@ public class MemberServiceImpl implements MemberService {
 
     @Resource
     private MemberMapper memberMapper;
+    @Resource
+    private MemberReadStateMapper memberReadStateMapper;
 
     @Override
     public void createMember(String username, String password, String nickname) {
@@ -56,5 +60,13 @@ public class MemberServiceImpl implements MemberService {
             throw new BusinessException("M03", "密码错误");
         }
         return member;
+    }
+
+    @Override
+    public MemberReadState selectMemberReadState(Long memberId, Long bookId) {
+        QueryWrapper<MemberReadState> qw = new QueryWrapper<>();
+        qw.eq("book_id", bookId);
+        qw.eq("member_id", memberId);
+        return memberReadStateMapper.selectOne(qw);
     }
 }

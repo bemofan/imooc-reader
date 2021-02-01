@@ -8,6 +8,6 @@
     </settings>
     <plugins>
         <!-- mybatis-plus分页插件 -->
-        <plugin interceptor="com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor"></plugin>
+        <plugin interceptor="com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor"/>
     </plugins>
 </configuration>

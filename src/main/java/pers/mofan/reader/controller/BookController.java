@@ -8,11 +8,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import pers.mofan.reader.entity.Book;
 import pers.mofan.reader.entity.Evaluation;
+import pers.mofan.reader.entity.Member;
+import pers.mofan.reader.entity.MemberReadState;
 import pers.mofan.reader.service.BookService;
 import pers.mofan.reader.service.CategoryService;
 import pers.mofan.reader.service.EvaluationService;
+import pers.mofan.reader.service.MemberService;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -29,6 +33,8 @@ public class BookController {
 
     @Resource
     private EvaluationService evaluationService;
+    @Resource
+    private MemberService memberService;
 
     @GetMapping("/")
     public ModelAndView showIndex() {
@@ -48,10 +54,17 @@ public class BookController {
     }
 
     @GetMapping("/book/{id}")
-    public ModelAndView showDetail(@PathVariable("id")Long id) {
+    public ModelAndView showDetail(@PathVariable("id")Long id, HttpSession session) {
         Book book = bookService.selectById(id);
         List<Evaluation> evaluationList = evaluationService.selectByBookId(id);
+
         ModelAndView mav = new ModelAndView("/detail");
+        Member member= (Member)session.getAttribute("loginMember");
+        if (member != null) {
+            // 获取会员阅读状态
+            MemberReadState memberReadState = memberService.selectMemberReadState(member.getMemberId(), id);
+            mav.addObject("memberReadState", memberReadState);
+        }
         mav.addObject("book", book);
         mav.addObject("evaluationList",evaluationList);
         return mav;
