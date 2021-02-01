@@ -1,5 +1,6 @@
 package pers.mofan.reader.service;
 
+import pers.mofan.reader.entity.Evaluation;
 import pers.mofan.reader.entity.Member;
 import pers.mofan.reader.entity.MemberReadState;
 
@@ -33,4 +34,22 @@ public interface MemberService {
      * @return 阅读状态对象
      */
     MemberReadState selectMemberReadState(Long memberId, Long bookId);
+
+    /**
+     * 更新阅读状态
+     * @param memberId 会员编号
+     * @param bookId 图书编号
+     * @param readState 阅读状态
+     */
+    void updateMemberReadState(Long memberId, Long bookId, Integer readState);
+
+    /**
+     * 发布新的短评
+     * @param memberId 会员编号
+     * @param bookId 图书编号
+     * @param score 评分
+     * @param content 短评内容
+     * @return 短评对象
+     */
+    Evaluation evaluate(Long memberId, Long bookId, Integer score, String content);
 }

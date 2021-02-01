@@ -52,6 +52,48 @@
             <#if memberReadState ??>
             $("*[data-read-state='${memberReadState.readState}']").addClass("highlight");
             </#if>
+            <#if !loginMember ??>
+            $("*[data-read-state], #btnEvaluation, *[data-evaluation-id]").click(function () {
+                $("#exampleModalCenter").modal("show");
+            })
+            </#if>
+            <#if loginMember ??>
+            $("*[data-read-state]").click(function () {
+                let readState = $(this).data("read-state");
+                $.post("/update_read_state", {
+                    memberId: ${loginMember.memberId},
+                    bookId: ${book.bookId},
+                    readState: readState
+                }, function (json) {
+                    if (json.code == "0") {
+                        $("*[data-read-state]").removeClass("highlight");
+                        $("*[data-read-state='" + readState + "']").addClass("highlight");
+                    }
+                }, "json")
+            });
+            $("#btnEvaluation").click(function () {
+                $("#score").raty({});
+                $("#dlgEvaluation").modal("show");
+            })
+
+            $("#btnSubmit").click(function () {
+                let score = $("#score").raty("score");
+                let content = $("#content").val();
+                if (score === 0 || $.trim(content) === "") {
+                    return;
+                }
+                $.post("/evaluate", {
+                    score: score,
+                    bookId: ${book.bookId},
+                    memberId: ${loginMember.memberId},
+                    content: content
+                }, function (json) {
+                    if (json.code === "0") {
+                        window.location.reload();
+                    }
+                }, "json")
+            })
+            </#if>
         })
     </script>
 </head>
@@ -168,7 +210,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-body">
-                <h6>为"从 0 开始学爬虫"写短评</h6>
+                <h6>为"${book.bookName}"写短评</h6>
                 <form id="frmEvaluation">
                     <div class="input-group  mt-2 ">
                         <span id="score"></span>

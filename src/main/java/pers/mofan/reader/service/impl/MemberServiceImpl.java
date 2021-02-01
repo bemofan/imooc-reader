@@ -2,9 +2,12 @@ package pers.mofan.reader.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import pers.mofan.reader.entity.Evaluation;
 import pers.mofan.reader.entity.Member;
 import pers.mofan.reader.entity.MemberReadState;
+import pers.mofan.reader.mapper.EvaluationMapper;
 import pers.mofan.reader.mapper.MemberMapper;
 import pers.mofan.reader.mapper.MemberReadStateMapper;
 import pers.mofan.reader.service.MemberService;
@@ -29,6 +32,8 @@ public class MemberServiceImpl implements MemberService {
     private MemberMapper memberMapper;
     @Resource
     private MemberReadStateMapper memberReadStateMapper;
+    @Resource
+    private EvaluationMapper evaluationMapper;
 
     @Override
     public void createMember(String username, String password, String nickname) {
@@ -62,11 +67,45 @@ public class MemberServiceImpl implements MemberService {
         return member;
     }
 
+    @Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
     @Override
     public MemberReadState selectMemberReadState(Long memberId, Long bookId) {
         QueryWrapper<MemberReadState> qw = new QueryWrapper<>();
         qw.eq("book_id", bookId);
         qw.eq("member_id", memberId);
         return memberReadStateMapper.selectOne(qw);
+    }
+
+    @Override
+    public void updateMemberReadState(Long memberId, Long bookId, Integer readState) {
+        QueryWrapper<MemberReadState> qw = new QueryWrapper<>();
+        qw.eq("book_id", bookId).eq("member_id", memberId);
+        MemberReadState memberReadState = memberReadStateMapper.selectOne(qw);
+        if (memberReadState == null) {
+            memberReadState = MemberReadState.builder().
+                    memberId(memberId).bookId(bookId).
+                    readState(readState).
+                    createTime(new Date()).
+                    build();
+            memberReadStateMapper.insert(memberReadState);
+        } else {
+            memberReadState.setReadState(readState);
+            memberReadStateMapper.updateById(memberReadState);
+        }
+    }
+
+    @Override
+    public Evaluation evaluate(Long memberId, Long bookId, Integer score, String content) {
+        Evaluation evaluation = Evaluation.builder()
+                .memberId(memberId)
+                .bookId(bookId)
+                .score(score)
+                .content(content)
+                .createTime(new Date())
+                .state("enable")
+                .enjoy(0)
+                .build();
+        evaluationMapper.insert(evaluation);
+        return evaluation;
     }
 }
