@@ -95,7 +95,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Evaluation evaluate(Long memberId, Long bookId, Integer score, String content) {
+    public void evaluate(Long memberId, Long bookId, Integer score, String content) {
         Evaluation evaluation = Evaluation.builder()
                 .memberId(memberId)
                 .bookId(bookId)
@@ -106,6 +106,13 @@ public class MemberServiceImpl implements MemberService {
                 .enjoy(0)
                 .build();
         evaluationMapper.insert(evaluation);
+    }
+
+    @Override
+    public Evaluation enjoy(Long evaluationId) {
+        Evaluation evaluation = evaluationMapper.selectById(evaluationId);
+        evaluation.setEnjoy(evaluation.getEnjoy() +1);
+        evaluationMapper.updateById(evaluation);
         return evaluation;
     }
 }

@@ -49,7 +49,13 @@ public interface MemberService {
      * @param bookId 图书编号
      * @param score 评分
      * @param content 短评内容
+     */
+    void evaluate(Long memberId, Long bookId, Integer score, String content);
+
+    /**
+     * 短评功能
+     * @param evaluationId 短评编号
      * @return 短评对象
      */
-    Evaluation evaluate(Long memberId, Long bookId, Integer score, String content);
+    Evaluation enjoy(Long evaluationId);
 }
